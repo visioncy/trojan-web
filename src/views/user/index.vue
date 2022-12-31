@@ -91,6 +91,7 @@
                     <el-dropdown-menu>
                         <el-dropdown-item @click="userItem=scope.row;handleShare()">{{ $t('user.shareLink') }}</el-dropdown-item>
                         <el-dropdown-item @click="userItem=scope.row;handleClash()">{{ $t('user.importClash') }}</el-dropdown-item>
+						<el-dropdown-item @click="userItem=scope.row;handleMultiShare()">{{ $t('user.importMulti') }}</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
@@ -346,6 +347,19 @@ export default {
             })
             this.qrcodeVisible = true
         },
+		handleMultiShare() {
+			let userInfo = btoa(`{"user": "${this.userItem.Username}", "pass": "${atob(this.userItem.Password)}"}`)
+			this.shareLink = `${window.location.origin}/trojan/user/subscribemulti?token=${userInfo}`
+		    this.$nextTick(() => {
+		        // eslint-disable-next-line
+		        new QRCode(this.$refs.qrcode, {
+		            width: 200,
+		            height: 200,
+		            text: this.shareLink
+		        }) 
+		    })
+		    this.qrcodeVisible = true
+		},
         handleClash() {
             let userInfo = btoa(`{"user": "${this.userItem.Username}", "pass": "${atob(this.userItem.Password)}"}`)
             let url = `${window.location.origin}/trojan/user/subscribe?token=${userInfo}`

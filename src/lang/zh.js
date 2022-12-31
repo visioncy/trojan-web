@@ -102,6 +102,7 @@ export default {
         modifyUser: '修改账密',
         shareLink: 'trojan链接',
         importClash: '导到clash',
+		importMulti: '导到订阅',
         meanUnlimit: '-1代表无流量限制',
         inputUsername: '输入用户名',
         inputPassword: '输入密码',
