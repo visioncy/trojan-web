@@ -92,7 +92,7 @@
                         <el-dropdown-item @click="userItem=scope.row;commonType=4;handleShare()">{{ $t('user.trojanShareLink') }}</el-dropdown-item>
                         <el-dropdown-item @click="userItem=scope.row;commonType=5;handleShare()">{{ $t('user.clashShareLink') }}</el-dropdown-item>
                         <el-dropdown-item @click="userItem=scope.row;handleClash()">{{ $t('user.importClash') }}</el-dropdown-item>
-						<el-dropdown-item @click="userItem=scope.row;handleMultiShare()">{{ $t('user.importMulti') }}</el-dropdown-item>
+						<el-dropdown-item @click="userItem=scope.row;commonType=6;handleMultiShare()">{{ $t('user.importMulti') }}</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
@@ -142,6 +142,7 @@
     </el-dialog>
     <el-dialog :title="commonTitle" v-model="qrcodeVisible" :width="dialogWidth" @close="closeQRCode">
         <div id="qrcode" ref="qrcode" class="qrcodeCenter"></div>
+        <br/>
         <p class="qrcodeCenter"> {{ shareLink }} </p>
     </el-dialog>
     <el-dialog :title="expiryShow" v-model="expiryVisible" :width="dialogWidth">
@@ -207,7 +208,7 @@ export default {
             expiryVisible: false,
             expiryShow: '',
             patchButton: false,
-            // 确认框类型: 0 删除, 1 重置流量, 2 新增用户, 3 修改用户, 4 trojan链接, 5 clash链接
+            // 确认框类型: 0 删除, 1 重置流量, 2 新增用户, 3 修改用户, 4 trojan链接, 5 clash链接,6.导出节点订阅
             commonType: 0,
             userItem: null,
             quota: -1,
@@ -253,8 +254,8 @@ export default {
         ...mapState(['dialogWidth', 'isAdmin']),
         commonTitle: function() {
             let text = ''
-            if (this.commonType === 4) {
-                text = this.$t('user.trojanShareLink')
+            if (this.commonType === 6) {
+                text = this.$t('user.subShareLink') + this.userItem.Username
             } else if (this.commonType === 5) {
                 text = this.$t('user.clashShareLink')
             } else if (this.commonType === 2) {
@@ -364,6 +365,8 @@ export default {
 		    this.$nextTick(() => {
 		        // eslint-disable-next-line
 		        new QRCode(this.$refs.qrcode, {
+                    title: this.userItem.Username,
+                    titleHeight: 40,
 		            width: 200,
 		            height: 200,
 		            text: this.shareLink
