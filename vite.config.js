@@ -6,7 +6,7 @@ import externalGlobals from 'rollup-plugin-external-globals'
 
 export default defineConfig(({ command }) => {
 
-    const proxyTarget = 'http://xxooo.shop'
+    const proxyTarget = 'http://xxooo.online'
 
     let vueI18n = {}
 
@@ -39,7 +39,7 @@ export default defineConfig(({ command }) => {
         },
         server: {
             host: "127.0.0.1",
-            port: 8324,
+            port: 5173,
             open: true,
             // 反向代理
             proxy: {
