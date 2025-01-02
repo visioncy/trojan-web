@@ -12,11 +12,23 @@
     </el-form-item>
     </el-form>
     <el-table
-    :data="dataList.filter(data => !search || data.Username.toLowerCase().includes(search.toLowerCase()))" :height="clientHeight" @selection-change="handleSelectionChange" class="tableShow">
+    :data="dataList.filter(data => !search || data.Username.toLowerCase().includes(search.toLowerCase()))" :height="clientHeight" @selection-change="handleSelectionChange" class="modern-table">
         <el-table-column
         type="selection"
         width="55" v-if="isAdmin">
         </el-table-column>
+
+        <!-- 顺序号列 -->
+        <el-table-column
+            label="#"
+            width="60"
+            prop="NO"
+            :render-header="(h) => h('span', '#')">
+            <template #default="scope">
+                {{ scope.$index + 1 }}
+            </template>
+        </el-table-column>
+
         <el-table-column
         :label="$t('username')"
         prop="Username"
@@ -50,7 +62,7 @@
             <p>{{ $t('user.remaining') }}: {{ calculateDay(scope.row.ExpiryDate) }}</p>
             <template #reference>
                 <div class="name-wrapper">
-                    <el-tag>{{ scope.row.ExpiryDate === '' ? $t('user.unlimit') : scope.row.ExpiryDate }}</el-tag>
+                    <el-tag :type="calculateTagType(scope.row.ExpiryDate)">{{ scope.row.ExpiryDate }}</el-tag>
                 </div>
             </template>
             </el-popover>
@@ -398,6 +410,22 @@ export default {
         calculateDay(day) {
             return dayjs(day).diff(dayjs(dayjs().format('YYYY-MM-DD')), 'day')
         },
+        calculateTagType(expiryDate) {
+            if (expiryDate === '') {
+                return ''; // 默认灰色
+            }
+            const currentDate = new Date();
+            const expiry = new Date(expiryDate);
+            const diffInDays = (expiry - currentDate) / (1000 * 60 * 60 * 24);
+
+            if (diffInDays < 0) {
+                return 'danger'; // 已经过期
+            } else if (diffInDays <= 10) {
+                return 'warning'; // 10 天内即将过期
+            } else {
+                return 'primary'; // 正常状态
+            }
+        },
         async setUserExpire() {
             const formData = new FormData()
             formData.set('id', this.userItem.ID)
@@ -644,4 +672,55 @@ export default {
         }
     }
 }
+
+
+/* 现代化表格样式 */
+.modern-table {
+    border: 1px solid #ccc; /* 浅灰色边框 */
+    border-radius: 10px; /* 圆角 */
+    background: linear-gradient(45deg, #f0f8ff, #f5f7fa); /* 渐变背景 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* 阴影效果 */
+    overflow: hidden; /* 防止内容溢出 */
+    font-size: 14px; /* 字体大小 */
+}
+
+/* 表头样式 */
+.modern-table th {
+    background-color: #409eff; /* 蓝色背景 */
+    //color: white; /* 白色文字 */
+    text-align: left;
+    font-weight: bold; /* 加粗 */
+    padding: 12px;
+    border-bottom: 2px solid #1e78b0; /* 边框颜色 */
+}
+
+/* 单元格样式 */
+.modern-table td {
+    padding: 12px;
+    color: #333; /* 深灰色文字 */
+    border-bottom: 1px solid #f0f0f0; /* 行间边框 */
+}
+
+/* 隔行变色 */
+.modern-table .el-table__row:nth-child(odd) {
+    background-color: #fafafa; /* 浅灰色背景 */
+}
+.modern-table .el-table__row:nth-child(even) {
+    background-color: #ffffff; /* 白色背景 */
+}
+
+.el-table--enable-row-hover .el-table__body tr:hover>td.el-table__cell {
+    background-color: #e6f7ff; /* 浅蓝色背景 */
+}
+/* 鼠标悬停行的效果 */
+.modern-table .el-table__row:hover  {
+    background-color: #e6f7ff; /* 浅蓝色背景 */
+    cursor: pointer; /* 鼠标指针样式 */
+}
+
+/* 禁用表格行的默认聚焦样式 */
+.modern-table .el-table__row:focus {
+    outline: none; /* 移除聚焦框 */
+}
+
 </style>

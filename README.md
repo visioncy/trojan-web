@@ -12,4 +12,8 @@
 3. 生产打包  
    `vite build`
 
+调试网址修改:
+   `trojan-web/src/utils/request.js:47`
+
+
 **欢迎fork以改进优化页面**

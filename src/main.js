@@ -8,6 +8,8 @@ import i18n from './lang/index' // internationalization
 import 'virtual:svg-icons-register'
 import SvgIcon from '@/components/SvgIcon'// svg组件
 import '@/icons'
+// main.js
+import '@/styles/fonts.scss'; // 依据实际路径调整
 
 const whiteList = ['/login', '/register'] // no redirect whitelist
 const adminList = ['/trojan'] // need admin role
